@@ -64,6 +64,20 @@ This file lets the conversion script know which colours in a given 8x8 tile corr
 
 The `bmp2chr` utility in the `utils` folder will read these two files, and output the raw NES image data in the `./assets/chr/` folder.
 
+### Updating Nametables
+
+For nametable generation, I used NES Lightbox. 
+
+I save these to `./raw/nametables/`, and then hook these up to the rle script in the Makefile.
+
+These are then loaded from the `./assets/nametables/` folder in the source.
+
+### Music and Sound Effects
+
+I used Famistudio for music and sounds in the game. 
+
+There aren't any cli tools available for auto-generating the asm out of the project files, so they are manually generated into the `./assets/sound/` folder.
+
 ### The Source
 
 All the assembly can be found in the `./src/` folder.
@@ -74,7 +88,7 @@ I was learning as I was making this, so there's some inconsistency and weirdness
 
 The level and sfx assembly is in the `./assets/` folder, since I considered them as more of an asset than source code.
 
-## Thanks to
+## Thanks To
 
 ### Gustavo Pezzi @ Pikuma.com
 
