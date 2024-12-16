@@ -15,7 +15,6 @@ build_utils:
 	g++ -std=c++17 -O2 ./utils/src/createPuzzles.cpp -o ./utils/bin/createPuzzles
 	g++ -std=c++17 -O2 ./utils/src/romStats.cpp -o ./utils/bin/romStats
 	g++ -std=c++17 -O2 ./utils/src/createWorld.cpp -o ./utils/bin/createWorld
-	g++ -std=c++17 -O2 ./utils/src/tutorialTextGen.cpp -o ./utils/bin/tutorialTextGen
 	make generate
 
 .SILENT:
