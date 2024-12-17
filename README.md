@@ -1,5 +1,7 @@
 <img src="https://github.com/AnthonyBongers/GhostsAndGraves/blob/main/reference/cart.png?raw=true" width="450">
 
+Looking to play? Download the newest release [here](https://github.com/AnthonyBongers/GhostsAndGraves/releases/download/release_1.0.0/Ghosts_And_Graves.nes)!
+
 Ghosts And Graves is a 6502 assembly NES demake of the puzzle game Tents And Trees!
 
 Complete 25 worlds (700 levels in total) of mind-bending puzzles. 
