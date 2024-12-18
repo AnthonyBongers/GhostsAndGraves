@@ -1,4 +1,4 @@
-*Looking to play? Download the latest release [here](https://github.com/AnthonyBongers/GhostsAndGraves/releases/download/release_1.0.0/Ghosts_And_Graves.nes)!*
+*Looking to play? Download the latest release [here](https://github.com/AnthonyBongers/GhostsAndGraves/releases/download/release_1.0.1/Ghosts_And_Graves.nes)!*
 
 <img src="https://github.com/AnthonyBongers/GhostsAndGraves/blob/main/reference/cart.png?raw=true" width="450">
 
