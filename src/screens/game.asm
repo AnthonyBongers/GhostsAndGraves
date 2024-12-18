@@ -1229,7 +1229,7 @@ DidMoveCursor: .res 1                  ; Toggle byte to determine if the cursor 
 
     cmp #CellTypes::Empty              ; If the cell type was "Empty", then it can be auto-dug.
     bne :+
-      jsr ChangeCellType
+      jsr IncrementCellType
     :
   NotHoldingAction:
 
@@ -1237,7 +1237,7 @@ DidMoveCursor: .res 1                  ; Toggle byte to determine if the cursor 
 .endproc
 
 ;; Update the cell type of a given x and y coordinate on the game board.
-.proc ChangeCellType
+.proc IncrementCellType
   lda CursorX
   
   ldy CursorY                          ; Determine the index of the cell from the given x and y coord.
@@ -1372,6 +1372,163 @@ DidMoveCursor: .res 1                  ; Toggle byte to determine if the cursor 
     sta RenderTileAttributes
 
     lda #CellTypes::Empty
+    sta PlayerBoard,x
+    lda #$ff
+  :
+
+  lda CursorX
+  sta RerenderX
+  lda CursorY
+  sta RerenderY
+
+  lda #1
+  sta RerenderAttribute                ; Update the attribute of the cell that just changed.
+
+  jsr RerenderLevelCell                ; Request to rerender the tile.
+
+  jsr CheckLevelComplete               ; Since the game board just changed, check the level completion state.
+
+  jsr PlaySoundDig                     ; Play a sound effect from the user input
+
+  rts
+.endproc
+
+;; Update the cell type of a given x and y coordinate on the game board.
+.proc DecrementCellType
+  lda CursorX
+  
+  ldy CursorY                          ; Determine the index of the cell from the given x and y coord.
+  LoopYIndex:
+    cpy #0
+    beq DoneLoopYIndex                 ; Stop once we reach 0.
+
+    clc
+    adc LevelWidth
+
+    dey
+    jmp LoopYIndex
+  DoneLoopYIndex:
+
+  tax
+  lda PlayerBoard,x                    ; Load the current cell type...
+
+  cmp #CellTypes::Grave                ; If the current cell type is a Grave, then update it to a directional UP grave.
+  bne :+
+    lda #$44
+    sta RenderTileIndex
+
+    lda #%00000010
+    sta RenderTileAttributes
+
+    lda #CellTypes::GraveLeft
+    sta PlayerBoard,x
+    lda #$ff
+  :
+  cmp #CellTypes::GraveUp              ; If the current cell type is a directional UP grave, then update it to a directional RIGHT grave.
+  bne :+
+    lda #$40
+    sta RenderTileIndex
+
+    lda #%00000010
+    sta RenderTileAttributes
+
+    lda #CellTypes::Grave
+    sta PlayerBoard,x
+    lda #$ff
+  :
+  cmp #CellTypes::GraveRight           ; If the current cell type is a directional RIGHT grave, then update it to a directional DOWN grave.
+  bne :+
+    lda #$48
+    sta RenderTileIndex
+
+    lda #%00000010
+    sta RenderTileAttributes
+
+    lda #CellTypes::GraveUp
+    sta PlayerBoard,x
+    lda #$ff
+  :
+  cmp #CellTypes::GraveDown            ; If the current cell type is a directional DOWN grave, then update it to a directional LEFT grave.
+  bne :+
+    lda #$42
+    sta RenderTileIndex
+
+    lda #%00000010
+    sta RenderTileAttributes
+
+    lda #CellTypes::GraveRight
+    sta PlayerBoard,x
+    lda #$ff
+  :
+  cmp #CellTypes::GraveLeft            ; If the current cell type is a directional LEFT grave, then update it to a non-directional grave.
+  bne :+
+    lda #$46
+    sta RenderTileIndex
+
+    lda #%00000010
+    sta RenderTileAttributes
+
+    lda #CellTypes::GraveDown
+    sta PlayerBoard,x
+    lda #$ff
+  :
+
+  ldy LevelType
+  cpy #LevelTypes::NoShovel
+  bne EndNoShovel                      ; If we're in no shovel mode, we want to skip the dug state and immediately show a ghost. Spooky!
+    cmp #CellTypes::Empty
+    bne :+
+      lda #$a2
+      sta RenderTileIndex
+
+      lda #%00000011
+      sta RenderTileAttributes
+
+      lda #CellTypes::Ghost
+      sta PlayerBoard,x
+      lda #$ff
+    :
+  EndNoShovel:
+
+  ldy LevelType
+  cpy #LevelTypes::NoShovel
+  beq EndShovel                        ; We're not in no shovel mode, so digging an empty cell will result in a ground tile.
+    cmp #CellTypes::Empty
+    bne :+
+      lda #$a2
+      sta RenderTileIndex
+
+      lda #%00000011
+      sta RenderTileAttributes
+
+      lda #CellTypes::Ghost
+      sta PlayerBoard,x
+      lda #$ff
+    :
+  EndShovel:
+
+  cmp #CellTypes::Ground               ; If the current cell is a ground tile, change it to a ghost. Still as spooky as it was a couple dozen lines above this!
+  bne :+
+    lda #$00
+    sta RenderTileIndex
+
+    lda #%00000000
+    sta RenderTileAttributes
+
+    lda #CellTypes::Empty
+    sta PlayerBoard,x
+    lda #$ff
+  :
+
+  cmp #CellTypes::Ghost                ; If the current cell is a ghost tile (not spooky anymore tbh), then change the tile to an empty one.
+  bne :+
+    lda #$26
+    sta RenderTileIndex
+
+    lda #%00000001
+    sta RenderTileAttributes
+
+    lda #CellTypes::Ground
     sta PlayerBoard,x
     lda #$ff
   :
@@ -1600,7 +1757,13 @@ DidMoveCursor: .res 1                  ; Toggle byte to determine if the cursor 
   lda PressedButtons
   and #BUTTON_A                        ; If the A button was just pressed, update the tile under the cursor.
   beq :+
-    jsr ChangeCellType
+    jsr IncrementCellType
+  :
+
+  lda PressedButtons
+  and #BUTTON_B                        ; If the B button was just pressed, update the tile under the cursor.
+  beq :+
+    jsr DecrementCellType
   :
 
   lda PressedButtons
