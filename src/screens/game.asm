@@ -1473,39 +1473,18 @@ DidMoveCursor: .res 1                  ; Toggle byte to determine if the cursor 
     lda #$ff
   :
 
-  ldy LevelType
-  cpy #LevelTypes::NoShovel
-  bne EndNoShovel                      ; If we're in no shovel mode, we want to skip the dug state and immediately show a ghost. Spooky!
-    cmp #CellTypes::Empty
-    bne :+
-      lda #$a2
-      sta RenderTileIndex
+  cmp #CellTypes::Empty
+  bne :+
+    lda #$a2
+    sta RenderTileIndex
 
-      lda #%00000011
-      sta RenderTileAttributes
+    lda #%00000011
+    sta RenderTileAttributes
 
-      lda #CellTypes::Ghost
-      sta PlayerBoard,x
-      lda #$ff
-    :
-  EndNoShovel:
-
-  ldy LevelType
-  cpy #LevelTypes::NoShovel
-  beq EndShovel                        ; We're not in no shovel mode, so digging an empty cell will result in a ground tile.
-    cmp #CellTypes::Empty
-    bne :+
-      lda #$a2
-      sta RenderTileIndex
-
-      lda #%00000011
-      sta RenderTileAttributes
-
-      lda #CellTypes::Ghost
-      sta PlayerBoard,x
-      lda #$ff
-    :
-  EndShovel:
+    lda #CellTypes::Ghost
+    sta PlayerBoard,x
+    lda #$ff
+  :
 
   cmp #CellTypes::Ground               ; If the current cell is a ground tile, change it to a ghost. Still as spooky as it was a couple dozen lines above this!
   bne :+
@@ -1520,18 +1499,39 @@ DidMoveCursor: .res 1                  ; Toggle byte to determine if the cursor 
     lda #$ff
   :
 
-  cmp #CellTypes::Ghost                ; If the current cell is a ghost tile (not spooky anymore tbh), then change the tile to an empty one.
-  bne :+
-    lda #$26
-    sta RenderTileIndex
+  ldy LevelType
+  cpy #LevelTypes::NoShovel
+  bne EndNoShovel                      ; If we're in no shovel mode, we want to skip the dug state and immediately show an empty tile.
+    cmp #CellTypes::Ghost
+    bne :+
+      lda #$00
+      sta RenderTileIndex
 
-    lda #%00000001
-    sta RenderTileAttributes
+      lda #%00000000
+      sta RenderTileAttributes
 
-    lda #CellTypes::Ground
-    sta PlayerBoard,x
-    lda #$ff
-  :
+      lda #CellTypes::Empty
+      sta PlayerBoard,x
+      lda #$ff
+    :
+  EndNoShovel:
+
+  ldy LevelType
+  cpy #LevelTypes::NoShovel
+  beq EndShovel                        ; We're not in no shovel mode, so digging a ghost cell will result in a ground tile.
+    cmp #CellTypes::Ghost
+    bne :+
+      lda #$26
+      sta RenderTileIndex
+
+      lda #%00000001
+      sta RenderTileAttributes
+
+      lda #CellTypes::Ground
+      sta PlayerBoard,x
+      lda #$ff
+    :
+  EndShovel:
 
   lda CursorX
   sta RerenderX

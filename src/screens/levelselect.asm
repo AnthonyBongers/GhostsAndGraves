@@ -438,6 +438,9 @@ WorldDigitsPPUAddr = $2052             ; PPU address destination for the world n
 .endproc
 
 .proc LevelSelectInit
+  lda #8
+  sta PlayerProgressWorld
+
   ;; Disable VBlank.
   lda #0
   sta PPU_CTRL
