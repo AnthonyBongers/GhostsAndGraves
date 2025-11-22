@@ -1,4 +1,14 @@
-*Looking to play? Download the latest release [here](https://github.com/AnthonyBongers/GhostsAndGraves/releases/tag/release_1.0.2)!*
+*Looking to play? Download the latest release [here](https://github.com/AnthonyBongers/GhostsAndGraves/releases/tag/release_1.0.3)!*
+
+**NOTE: If you're updating to 1.0.3 from a previous version, don't!**
+
+If the game was working fine for you, 1.0.3 won't change anything. This will overwrite existing save data. I shoulda added this from the get-go, oops!
+
+This update is for flash carts, emulators will (technically) not apply here.
+
+Flash carts can have garbage data in SRAM on first launch, which was
+
+messing up the state of the game when launching it for the first time.
 
 <img src="https://github.com/AnthonyBongers/GhostsAndGraves/blob/main/reference/cart.png?raw=true" width="450">
 
@@ -101,4 +111,3 @@ For anyone looking to learn 6502 assembly and NES development, this is THE cours
 ### Contributors @ nesdev.org
 
 For all the weird quirks of the NES -- and there are LOTS -- this is the best reference.
-
