@@ -1,14 +1,10 @@
 *Looking to play? Download the latest release [here](https://github.com/AnthonyBongers/GhostsAndGraves/releases/tag/release_1.0.3)!*
 
-**NOTE: If you're updating to 1.0.3 from a previous version, don't!**
+**NOTE: If you're updating to 1.0.3 from a previous version, don't! This will overwrite existing save data.**
 
-If the game was working fine for you, 1.0.3 won't change anything. This will overwrite existing save data. I shoulda added this from the get-go, oops!
+Flash carts can have garbage data in SRAM on first launch, which was messing up the state of the game when launching it for the first time.
 
-This update is for flash carts, emulators will (technically) not apply here.
-
-Flash carts can have garbage data in SRAM on first launch, which was
-
-messing up the state of the game when launching it for the first time.
+Emulators usually have zero'd out SRAM, so wouldn't have been affected.
 
 <img src="https://github.com/AnthonyBongers/GhostsAndGraves/blob/main/reference/cart.png?raw=true" width="450">
 
